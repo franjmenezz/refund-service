@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  title: Secure Idempotent Refund Service
+  description: Microservicio de devoluciones de pagos con idempotencia estricta y controles PCI-DSS.
+  version: 1.0.0
+  contact:
+    name: Francisco José Jiménez Pozo
+servers:
+  - url: http://localhost:8080
+    description: Entorno local de pruebas
+
+paths:
+  /api/v1/payments/{payment_id}/refunds:
+    post:
+      summary: Solicita la devolución (total o parcial) de un pago
+      operationId: createRefund
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUIDv4 único por intento lógico de operación.
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: "Bearer <token>"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      responses:
+        '201':
+          description: Devolución creada correctamente (primera vez).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '200':
+          description: Reintento idempotente — misma key, mismo payload. Se devuelve el resultado original.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Error de formato o validación (incluye detección de PAN/CVV en 'reason').
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Autenticación ausente o inválida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: El pago indicado no existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Misma Idempotency-Key reutilizada con un payload distinto.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Regla de negocio violada (importe excedido o moneda no coincide).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    RefundRequest:
+      type: object
+      required: [amount, currency, reason]
+      properties:
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+          example: 25.50
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          example: EUR
+        reason:
+          type: string
+          maxLength: 250
+          example: "Producto defectuoso"
+
+    RefundResponse:
+      type: object
+      properties:
+        refundId:
+          type: string
+          format: uuid
+        paymentId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [COMPLETED]
+        createdAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - SENSITIVE_DATA_DETECTED
+            - UNAUTHORIZED
+            - PAYMENT_NOT_FOUND
+            - IDEMPOTENCY_CONFLICT
+            - AMOUNT_EXCEEDED
+            - CURRENCY_MISMATCH
+        message:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - bearerAuth: []
