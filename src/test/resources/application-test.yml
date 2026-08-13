@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    # Usamos un nombre de BD distinto al de application.yml para que los tests no interfieran
+    # con una eventual base de datos de desarrollo que tuvieras corriendo en paralelo.
+    url: jdbc:h2:mem:refunddb-test;DB_CLOSE_DELAY=-1
+app:
+  security:
+    # Token distinto al de application.yml, a propósito: así los tests no dependen por accidente
+    # del valor real de producción/demo, y si alguien cambia ese token, los tests no se rompen.
+    demo-token: "test-token"
