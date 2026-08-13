@@ -1,0 +1,72 @@
+<?xml version ="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+        <!--  
+            Heredamos de spring-boot-starter-parent para no tener que fihar manualmente las versiones de cada
+            dependecia Spring: el parent se encarga de que todas las vesriones que se usen sean compatibles entre sí.     
+        -->
+
+
+        <parent>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>3.3.4</version>
+            <relativePath/>
+        </parent>
+
+        <groupId>com.comercia</groupId>
+        <artifactId>refund-service</artifactId>
+        <version>1.0.0</version>
+        <name>refund-service</name>
+        <description>Secure Idempotent Refund Service - Comercia Global Payments</description>
+    
+        <properties>
+            <java.version>17</java.version>
+        </properties>
+    
+        <dependencies>
+            <!-- Servidor Web embebido (Tomcat) + soporte REST (@RestController, JSON automático) -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+
+            <!-- Hibernate + JpaRepository, usado por Payment y RefundRecord -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+
+            <!-- Habilita las anotaciones de validación (@NotNull, @Pattern, @Size...) usadas en RefundRequest -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+            </dependency>
+
+            <!-- Base de datos en memoria. scope=runtime: solo se nececita mientras la app corre, no para compilar -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+            </dependency>   
+
+            <!-- JUnit 5 para testing + MockMvc para los tests, scope=test: no viaja al artefacto final desplegado. -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+        </dependencies>
+    
+        <build>
+            <plugins>
+                <!-- Permite ejecutar "mvn spring-boot:run" y empaquetar un .jar ejecutable con "mvn package" -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>   
+                </plugin>
+            </plugins>
+        </build>
+</project>
