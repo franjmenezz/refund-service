@@ -23,8 +23,8 @@ public class DataSeeder implements CommandLineRunner {
 
     // IDs fijos (no aleatorios) a propósito: asi siempre se sabe de antemano que payment_id usar
     // en las pruebas manuales con curl o Postman, sin tener que consultar la BD primero.
-    private static final UUID PAYMENT_ID_1 = UUID.fromString("11111111-1111-4111-8111-111111111111");
-    private static final UUID PAYMENT_ID_2 = UUID.fromString("22222222-2222-4222-8222-222222222222");
+    public static final UUID PAYMENT_1_ID = UUID.fromString("11111111-1111-4111-8111-111111111111");
+    public static final UUID PAYMENT_2_ID = UUID.fromString("22222222-2222-4222-8222-222222222222");
 
     private final PaymentRepository paymentRepository;
 
@@ -37,8 +37,8 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        paymentRepository.save(new Payment(PAYMENT_ID_1, new BigDecimal("100.00"), "EUR"));
-        paymentRepository.save(new Payment(PAYMENT_ID_2, new BigDecimal("50.00"), "USD"));
+        paymentRepository.save(new Payment(PAYMENT_1_ID, new BigDecimal("100.00"), "EUR"));
+        paymentRepository.save(new Payment(PAYMENT_2_ID, new BigDecimal("50.00"), "USD"));
         log.info("Datos de demo cargados: 2 pagos disponibles para pruebas de refund.");
     }
 }
