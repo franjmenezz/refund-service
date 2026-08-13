@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: refund-service
+  datasoruce:
+    # H2 en memoria: los datos desaparecen al reinicar la app (a proposito, ver SPEC.md §6 "Fuera de alcance").
+    # DB_CLOSE_DELAY=-1 evita que H2 borre la base de datos en cuanto se cierra la primera conexión.
+    url: jdbc:h2:mem:refund-service;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:""
+  jpa:
+    hibernate:
+      # 'update': Hibernate crea/actualiza las tables automáticamente a partir de las entidades @Entity.
+      # Cómodo par una demo; en un entorno productivo real se usarían migraciones versionadas (Flyway, Liquibase, etc.).
+      ddl-auto: update
+    open-im-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      # Panel Web para inspecciona en la BD en memoria durante el desarrollo. Deshabilitado en producción.
+      enabled: true
+      path: /h2-console
+
+# Token de demo para autenticación Bearer.
+# En producción esto NO sería un token estático en un fichero de configuración; se validaría un JWT firmado 
+# o se haría introspección 0Auth2 contra un Identity Provider (ver SECURITY_AUDIT.md §5).
+ 
+app:
+  security:
+    demo-token: "demo-secret-token-2026"
+
+logging:
+  level:
+    com.comercia.refundservice: INFO
+    # Se silencia el SQL generado por Hibernate, ya que podría filtrar indirectamente datos de negocio en logs.
+    org.hibernate.SQL: WARN
