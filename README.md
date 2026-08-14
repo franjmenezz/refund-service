@@ -19,6 +19,10 @@ Microservicio de devoluciones de pagos con idempotencia estrícta y controloes P
 - JDK 17+
 - Maven 3.9+
 
+## Nota sobre la estructura de carpetas
+
+El enunciado de la prueba sugiere una estructura con `src/` y `tests/` como carpetas hermanas al mismo nivel. Este proyecto usa en su lugar la convención estándar de Maven: `src/main/java` para el código de producción y `src/test/java` para los tests, ambos bajo `src/`. Es la estructura que Maven, Gradle y prácticamente cualquier proyecto Java del mundo real esperan encontrar (herramientas de build, IDEs y pipelines de CI la asumen por defecto), así que se ha priorizado seguir esa convención en vez de una carpeta `tests/` separada, que rompería las herramientas estándar del ecosistema.
+
 ## Cómo ejecutar
 
 ```bash
