@@ -1,11 +1,11 @@
 # Secure Idempotent Refund Service
 
-Microservicio de devoluciones de pagos con idempotencia estrícta y controloes PCI-DSS, desarrollado para la prueba técnica de **Comercia Global Payments**.
+Microservicio de devoluciones de pagos con idempotencia estricta y controles PCI-DSS, desarrollado para la prueba técnica de **Comercia Global Payments**.
 
-- Especificación funcional/técnica: ['SPEC.md'](./SPEC.md)
-- Contrato OpenAPI: ['openapo.yaml'](./openapi.yaml)
-- Auditoría de seguridad: ['SECURITY_AUDIT.md'](./SECURITY_AUDIT.md)
-- Bitácora de prompts: ['PROMPTS.md'](./PROMPTS.md)
+- Especificación funcional/técnica: [`SPEC.md`](./SPEC.md)
+- Contrato OpenAPI: [`openapi.yaml`](./openapi.yaml)
+- Auditoría de seguridad: [`SECURITY_AUDIT.md`](./SECURITY_AUDIT.md)
+- Bitácora de prompts: [`PROMPTS.md`](./PROMPTS.md)
 
 ## Stack
 
